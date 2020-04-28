@@ -7,7 +7,7 @@ formatArticle = data => {
   let url = $("<a>").addClass("card-text").text(data.link).attr("href", data.link);
   let commentDiv = $("<div>").addClass("d-flex justify-content-between align-items-center");
   let buttonDiv = $("<div>").addClass("btn-group");
-  let commentBtn = $("<button>").addClass("btn btn-sm btn-outline-secondary").text("Comment").attr("data-id", data._id);
+  let commentBtn = $("<button>").addClass("comment-btn btn btn-sm btn-outline-secondary").text("Comment").attr("data-id", data._id);
   buttonDiv.append(commentBtn);
   commentDiv.append(buttonDiv);
   textcontainer.append(text)
@@ -30,7 +30,7 @@ $.getJSON("/articles", function (data) {
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", "button", function () {
+$(document).on("click", ".comment-btn", function () {
   // Empty the notes from the note section
   $("#comments").empty();
   // Save the id from the p tag
@@ -65,14 +65,14 @@ $(document).on("click", "button", function () {
 $(document).on("click", "#savenote", function () {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-
+  let bodyData = $("#bodyinput").val();
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
       method: "POST",
       url: "/articles/" + thisId,
       data: {
         // Value taken from note textarea
-        body: $("#bodyinput").val()
+        body: bodyData
       }
     })
     // With that done
@@ -84,6 +84,5 @@ $(document).on("click", "#savenote", function () {
     });
 
   // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
   $("#bodyinput").val("");
 });
